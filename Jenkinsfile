@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dh_cred')
-        IMAGE_NAME = "${DOCKERHUB_CREDENTIALS_USR}/front-pfa"
+        IMAGE_NAME = "${DOCKERHUB_CREDENTIALS_USR}/front-pfe"
     }
     triggers {
         pollSCM('*/5 * * * *') // Check every 5 minutes
