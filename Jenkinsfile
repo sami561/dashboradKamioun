@@ -59,7 +59,7 @@ pipeline {
                     docker pull ${IMAGE_NAME}:${env.BUILD_NUMBER}
 
                     # Run the container and expose port 4000
-                    docker run -d --name front-pfe -p 4000:4000 ${IMAGE_NAME}:${env.BUILD_NUMBER}
+                    docker run -d --name front-pfe -p 3000:3000 ${IMAGE_NAME}:${env.BUILD_NUMBER}
                     """
                 }
             }
