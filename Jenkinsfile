@@ -48,7 +48,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Frontend Container on Port 3004') {
+        stage('Deploy Frontend Container on Port 4000') {
             steps {
                 script {
                     sh """
@@ -58,7 +58,7 @@ pipeline {
                     # Pull the latest pushed image
                     docker pull ${IMAGE_NAME}:${env.BUILD_NUMBER}
 
-                    # Run the container and expose port 3004
+                    # Run the container and expose port 4000
                     docker run -d --name front-pfe -p 4000:4000 ${IMAGE_NAME}:${env.BUILD_NUMBER}
                     """
                 }
