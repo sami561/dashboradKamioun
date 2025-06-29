@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dh_cred')
-        IMAGE_NAME = "${DOCKERHUB_CREDENTIALS_USR}/front-pfa"
+        IMAGE_NAME = "${DOCKERHUB_CREDENTIALS_USR}/front-pfe"
     }
 
     triggers {
@@ -59,7 +59,7 @@ pipeline {
                     docker pull ${IMAGE_NAME}:${env.BUILD_NUMBER}
 
                     # Run the container and expose port 3004
-                    docker run -d --name front-pfa -p 3004:3000 ${IMAGE_NAME}:${env.BUILD_NUMBER}
+                    docker run -d --name front-pfe -p 4000:4000 ${IMAGE_NAME}:${env.BUILD_NUMBER}
                     """
                 }
             }
