@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const adminApi = createApi({
   reducerPath: "adminApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://34.173.189.86/api/kamarket",
+    baseUrl: "http://34.173.189.86/kamarket/kamarket/kamarket",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
       if (token) {
