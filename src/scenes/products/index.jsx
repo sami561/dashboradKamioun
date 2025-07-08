@@ -49,7 +49,7 @@ const Products = () => {
       headerName: "Product Image",
       flex: 0.25,
       renderCell: (params) => {
-        const imageUrl = `http://localhost:3000/kamarket${params.value[0]}`;
+        const imageUrl = `http://http://34.173.189.86/api/kamarket${params.value[0]}`;
         return (
           <Avatar
             src={imageUrl}

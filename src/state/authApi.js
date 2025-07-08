@@ -5,7 +5,7 @@ import { setToken } from "./authSlice";
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/",
+    baseUrl: "http://http://34.173.189.86/api/",
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth.token;
       if (token) {

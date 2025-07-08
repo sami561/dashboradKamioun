@@ -1,7 +1,7 @@
 import axios from "axios";
 import store from "state/store"; // Ensure the path is correct
 
-export const baseURL = "http://localhost:3000/";
+export const baseURL = "http://http://34.173.189.86/api/";
 
 const httpClientMultipart = axios.create({
   baseURL,
