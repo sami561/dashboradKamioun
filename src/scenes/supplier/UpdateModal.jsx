@@ -6,6 +6,7 @@ import {
   Modal,
   TextField,
   Typography,
+  Grid,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
@@ -106,76 +107,91 @@ const UpdateModal = ({ open, handleClose, row }) => {
         </Typography>
         {row ? (
           <form onSubmit={handleSubmit(onSubmit)}>
-            <TextField
-              label="Name"
-              {...register("name")}
-              error={!!errors.name}
-              helperText={errors.name?.message}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Email"
-              type="email"
-              {...register("email")}
-              error={!!errors.email}
-              helperText={errors.email?.message}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Phone"
-              {...register("phone")}
-              error={!!errors.phone}
-              helperText={errors.phone?.message}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Address"
-              {...register("address")}
-              error={!!errors.address}
-              helperText={errors.address?.message}
-              fullWidth
-              multiline
-              rows={3}
-              margin="normal"
-            />
-            <input
-              accept="image/*"
-              style={{ display: "none" }}
-              id="file-upload"
-              type="file"
-              onChange={handleImageChange}
-            />
-            <label htmlFor="file-upload">
-              <Button
-                variant="contained"
-                color="primary"
-                component="span"
-                fullWidth
-                sx={{ mt: 2 }}
-              >
-                {selectedImage ? "Change Logo" : "Upload Logo"}
-              </Button>
-            </label>
-            {selectedImage && (
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                Selected: {selectedImage.name}
-              </Typography>
-            )}
-            {errors.logo && (
-              <Typography color="error">{errors.logo.message}</Typography>
-            )}
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              fullWidth
-              sx={{ mt: 2 }}
-            >
-              Save Changes
-            </Button>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Name"
+                  {...register("name")}
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
+                  fullWidth
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Email"
+                  type="email"
+                  {...register("email")}
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                  fullWidth
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Phone"
+                  {...register("phone")}
+                  error={!!errors.phone}
+                  helperText={errors.phone?.message}
+                  fullWidth
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}></Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Address"
+                  {...register("address")}
+                  error={!!errors.address}
+                  helperText={errors.address?.message}
+                  fullWidth
+                  multiline
+                  rows={3}
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <input
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id="file-upload"
+                  type="file"
+                  onChange={handleImageChange}
+                />
+                <label htmlFor="file-upload">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    component="span"
+                    fullWidth
+                    sx={{ mt: 2 }}
+                  >
+                    {selectedImage ? "Change Logo" : "Upload Logo"}
+                  </Button>
+                </label>
+                {selectedImage && (
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    Selected: {selectedImage.name}
+                  </Typography>
+                )}
+                {errors.logo && (
+                  <Typography color="error">{errors.logo.message}</Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  fullWidth
+                  sx={{ mt: 2 }}
+                >
+                  Save Changes
+                </Button>
+              </Grid>
+            </Grid>
           </form>
         ) : (
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>

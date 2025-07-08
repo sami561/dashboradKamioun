@@ -11,6 +11,7 @@ import {
   Select,
   MenuItem,
   Chip,
+  Grid,
 } from "@mui/material";
 import React, { useState } from "react";
 import { z } from "zod";
@@ -131,167 +132,203 @@ const AddModal = ({ open, handleClose }) => {
           Add Product
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <TextField
-            label="SKU"
-            {...register("sku")}
-            error={!!errors.sku}
-            helperText={errors.sku?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Name"
-            {...register("name")}
-            error={!!errors.name}
-            helperText={errors.name?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Price"
-            type="number"
-            {...register("price")}
-            error={!!errors.price}
-            helperText={errors.price?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Cost"
-            type="number"
-            {...register("cost")}
-            error={!!errors.cost}
-            helperText={errors.cost?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Special Price"
-            type="number"
-            {...register("special_price")}
-            error={!!errors.special_price}
-            helperText={errors.special_price?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Manufacturer"
-            {...register("manufacturer")}
-            error={!!errors.manufacturer}
-            helperText={errors.manufacturer?.message}
-            fullWidth
-            margin="normal"
-          />
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Brand</InputLabel>
-            <Select {...register("brand")} label="Brand" error={!!errors.brand}>
-              {brands?.map((brand) => (
-                <MenuItem key={brand._id} value={brand._id}>
-                  {brand.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Supplier</InputLabel>
-            <Select
-              {...register("supplier")}
-              label="Supplier"
-              error={!!errors.supplier}
-            >
-              {suppliers?.map((supplier) => (
-                <MenuItem key={supplier._id} value={supplier._id}>
-                  {supplier.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="normal" error={!!errors.categories}>
-            <InputLabel>Categories</InputLabel>
-            <Select
-              multiple
-              value={selectedCategories}
-              onChange={handleCategoryChange}
-              label="Categories"
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip
-                      key={value}
-                      label={
-                        categories?.find((cat) => cat._id === value)
-                          ?.nameCategoryFr
-                      }
-                    />
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="SKU"
+                {...register("sku")}
+                error={!!errors.sku}
+                helperText={errors.sku?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Name"
+                {...register("name")}
+                error={!!errors.name}
+                helperText={errors.name?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Price"
+                type="number"
+                {...register("price")}
+                error={!!errors.price}
+                helperText={errors.price?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Cost"
+                type="number"
+                {...register("cost")}
+                error={!!errors.cost}
+                helperText={errors.cost?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Special Price"
+                type="number"
+                {...register("special_price")}
+                error={!!errors.special_price}
+                helperText={errors.special_price?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Manufacturer"
+                {...register("manufacturer")}
+                error={!!errors.manufacturer}
+                helperText={errors.manufacturer?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Brand</InputLabel>
+                <Select
+                  {...register("brand")}
+                  label="Brand"
+                  error={!!errors.brand}
+                >
+                  {brands?.map((brand) => (
+                    <MenuItem key={brand._id} value={brand._id}>
+                      {brand.nameBrandFr}
+                    </MenuItem>
                   ))}
-                </Box>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Supplier</InputLabel>
+                <Select
+                  {...register("supplier")}
+                  label="Supplier"
+                  error={!!errors.supplier}
+                >
+                  {suppliers?.map((supplier) => (
+                    <MenuItem key={supplier._id} value={supplier._id}>
+                      {supplier.company_nameFr}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl
+                fullWidth
+                margin="normal"
+                error={!!errors.categories}
+              >
+                <InputLabel>Categories</InputLabel>
+                <Select
+                  multiple
+                  value={selectedCategories}
+                  onChange={handleCategoryChange}
+                  label="Categories"
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value) => (
+                        <Chip
+                          key={value}
+                          label={
+                            categories?.find((cat) => cat._id === value)
+                              ?.nameCategoryFr
+                          }
+                        />
+                      ))}
+                    </Box>
+                  )}
+                >
+                  {categories?.map((category) => (
+                    <MenuItem key={category._id} value={category._id}>
+                      {category.nameCategoryFr}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.categories && (
+                  <Typography color="error" variant="caption">
+                    {errors.categories.message}
+                  </Typography>
+                )}
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Website IDs"
+                {...register("website_ids")}
+                error={!!errors.website_ids}
+                helperText={errors.website_ids?.message}
+                fullWidth
+                margin="normal"
+                placeholder="Comma-separated IDs"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="PCB"
+                type="number"
+                {...register("pcb")}
+                error={!!errors.pcb}
+                helperText={errors.pcb?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <input
+                accept="image/*"
+                style={{ display: "none" }}
+                id="file-upload"
+                type="file"
+                onChange={handleImageChange}
+              />
+              <label htmlFor="file-upload">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  component="span"
+                  fullWidth
+                  sx={{ mt: 2 }}
+                >
+                  {selectedImage ? "Change Image" : "Upload Image"}
+                </Button>
+              </label>
+              {selectedImage && (
+                <Typography variant="body2" sx={{ mt: 1 }}>
+                  Selected: {selectedImage.name}
+                </Typography>
               )}
-            >
-              {categories?.map((category) => (
-                <MenuItem key={category._id} value={category._id}>
-                  {category.nameCategoryFr}
-                </MenuItem>
-              ))}
-            </Select>
-            {errors.categories && (
-              <Typography color="error" variant="caption">
-                {errors.categories.message}
-              </Typography>
-            )}
-          </FormControl>
-          <TextField
-            label="Website IDs"
-            {...register("website_ids")}
-            error={!!errors.website_ids}
-            helperText={errors.website_ids?.message}
-            fullWidth
-            margin="normal"
-            placeholder="Comma-separated IDs"
-          />
-          <TextField
-            label="PCB"
-            type="number"
-            {...register("pcb")}
-            error={!!errors.pcb}
-            helperText={errors.pcb?.message}
-            fullWidth
-            margin="normal"
-          />
-          <input
-            accept="image/*"
-            style={{ display: "none" }}
-            id="file-upload"
-            type="file"
-            onChange={handleImageChange}
-          />
-          <label htmlFor="file-upload">
-            <Button
-              variant="contained"
-              color="primary"
-              component="span"
-              fullWidth
-              sx={{ mt: 2 }}
-            >
-              {selectedImage ? "Change Image" : "Upload Image"}
-            </Button>
-          </label>
-          {selectedImage && (
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              Selected: {selectedImage.name}
-            </Typography>
-          )}
-          {errors.image && (
-            <Typography color="error">{errors.image.message}</Typography>
-          )}
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            fullWidth
-            sx={{ mt: 2 }}
-          >
-            Save
-          </Button>
+              {errors.image && (
+                <Typography color="error">{errors.image.message}</Typography>
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                fullWidth
+                sx={{ mt: 2 }}
+              >
+                Save
+              </Button>
+            </Grid>
+          </Grid>
         </form>
       </Box>
     </Modal>

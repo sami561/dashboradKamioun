@@ -27,6 +27,7 @@ export const authApi = createApi({
         try {
           const { data } = await queryFulfilled;
           dispatch(setToken(data.token));
+          localStorage.setItem("accessToken", data.token);
         } catch (error) {
           console.error("Login failed:", error);
         }
@@ -60,4 +61,5 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation ,useRegisterMutation} = authApi;
+export const { useLoginMutation, useLogoutMutation, useRegisterMutation } =
+  authApi;

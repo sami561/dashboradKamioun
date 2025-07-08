@@ -6,6 +6,7 @@ import {
   Modal,
   TextField,
   Typography,
+  Grid,
 } from "@mui/material";
 import React, { useState } from "react";
 import { z } from "zod";
@@ -103,106 +104,132 @@ const AddModal = ({ open, handleClose }) => {
           Add Supplier
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <TextField
-            label="Arabic Company Name"
-            {...register("company_nameAr")}
-            error={!!errors.company_nameAr}
-            helperText={errors.company_nameAr?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="French Company Name"
-            {...register("company_nameFr")}
-            error={!!errors.company_nameFr}
-            helperText={errors.company_nameFr?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Contact Name"
-            {...register("contact_name")}
-            error={!!errors.contact_name}
-            helperText={errors.contact_name?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Phone Number"
-            {...register("phone_number")}
-            error={!!errors.phone_number}
-            helperText={errors.phone_number?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Postal Code"
-            {...register("postal_code")}
-            error={!!errors.postal_code}
-            helperText={errors.postal_code?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="City"
-            {...register("city")}
-            error={!!errors.city}
-            helperText={errors.city?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Country"
-            {...register("country")}
-            error={!!errors.country}
-            helperText={errors.country?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Capital"
-            {...register("capital")}
-            error={!!errors.capital}
-            helperText={errors.capital?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Email"
-            type="email"
-            {...register("email")}
-            error={!!errors.email}
-            helperText={errors.email?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Tax Registration Number"
-            {...register("tax_registration_number")}
-            error={!!errors.tax_registration_number}
-            helperText={errors.tax_registration_number?.message}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Address"
-            {...register("address")}
-            error={!!errors.address}
-            helperText={errors.address?.message}
-            fullWidth
-            multiline
-            rows={3}
-            margin="normal"
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            fullWidth
-            sx={{ mt: 2 }}
-          >
-            Save
-          </Button>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Arabic Company Name"
+                {...register("company_nameAr")}
+                error={!!errors.company_nameAr}
+                helperText={errors.company_nameAr?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="French Company Name"
+                {...register("company_nameFr")}
+                error={!!errors.company_nameFr}
+                helperText={errors.company_nameFr?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Contact Name"
+                {...register("contact_name")}
+                error={!!errors.contact_name}
+                helperText={errors.contact_name?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Phone Number"
+                {...register("phone_number")}
+                error={!!errors.phone_number}
+                helperText={errors.phone_number?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Postal Code"
+                {...register("postal_code")}
+                error={!!errors.postal_code}
+                helperText={errors.postal_code?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="City"
+                {...register("city")}
+                error={!!errors.city}
+                helperText={errors.city?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Country"
+                {...register("country")}
+                error={!!errors.country}
+                helperText={errors.country?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Capital"
+                {...register("capital")}
+                error={!!errors.capital}
+                helperText={errors.capital?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Email"
+                type="email"
+                {...register("email")}
+                error={!!errors.email}
+                helperText={errors.email?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Tax Registration Number"
+                {...register("tax_registration_number")}
+                error={!!errors.tax_registration_number}
+                helperText={errors.tax_registration_number?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Address"
+                {...register("address")}
+                error={!!errors.address}
+                helperText={errors.address?.message}
+                fullWidth
+                multiline
+                rows={3}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                fullWidth
+                sx={{ mt: 2 }}
+              >
+                Save
+              </Button>
+            </Grid>
+          </Grid>
         </form>
       </Box>
     </Modal>

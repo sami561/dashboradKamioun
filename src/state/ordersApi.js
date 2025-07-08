@@ -4,6 +4,13 @@ export const ordersApi = createApi({
   reducerPath: "ordersApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000/kamarket",
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ["Orders"],
   endpoints: (build) => ({
@@ -46,6 +53,14 @@ export const ordersApi = createApi({
       query: (status) => `orders/status/${status}`,
       providesTags: ["Orders"],
     }),
+    getCompletedOrdersTotal: build.query({
+      query: () => "orders/totals/completed",
+      providesTags: ["Orders"],
+    }),
+    getGvmPerMonth: build.query({
+      query: () => "orders/gvm-per-month",
+      providesTags: ["Orders"],
+    }),
   }),
 });
 
@@ -57,4 +72,6 @@ export const {
   useDeleteOrderMutation,
   useGetOrdersCountQuery,
   useGetOrdersByStatusQuery,
+  useGetCompletedOrdersTotalQuery,
+  useGetGvmPerMonthQuery,
 } = ordersApi;

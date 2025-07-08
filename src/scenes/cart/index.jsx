@@ -9,133 +9,9 @@ import { Add } from "@mui/icons-material";
 import { useGetCartQuery } from "state/cartApi";
 import { useState } from "react";
 
-// Dummy cart data
-const dummyCartItems = [
-  {
-    _id: 1,
-    product_id: 101,
-    product_name: "iPhone 15 Pro",
-    product_image: "/images/iphone15.jpg",
-    quantity: 2,
-    unit_price: 4500.0,
-    total_price: 9000.0,
-    customer_id: 201,
-    added_at: "2024-01-15T10:30:00Z",
-    updated_at: "2024-01-15T10:30:00Z",
-  },
-  {
-    _id: 2,
-    product_id: 102,
-    product_name: "Samsung Galaxy S24",
-    product_image: "/images/samsung-s24.jpg",
-    quantity: 1,
-    unit_price: 3800.0,
-    total_price: 3800.0,
-    customer_id: 201,
-    added_at: "2024-01-14T14:20:00Z",
-    updated_at: "2024-01-14T14:20:00Z",
-  },
-  {
-    _id: 3,
-    product_id: 103,
-    product_name: "MacBook Air M2",
-    product_image: "/images/macbook-air.jpg",
-    quantity: 1,
-    unit_price: 8500.0,
-    total_price: 8500.0,
-    customer_id: 202,
-    added_at: "2024-01-16T11:45:00Z",
-    updated_at: "2024-01-16T11:45:00Z",
-  },
-  {
-    _id: 4,
-    product_id: 104,
-    product_name: "AirPods Pro",
-    product_image: "/images/airpods-pro.jpg",
-    quantity: 3,
-    unit_price: 1200.0,
-    total_price: 3600.0,
-    customer_id: 203,
-    added_at: "2024-01-13T16:30:00Z",
-    updated_at: "2024-01-13T16:30:00Z",
-  },
-  {
-    _id: 5,
-    product_id: 105,
-    product_name: "iPad Air",
-    product_image: "/images/ipad-air.jpg",
-    quantity: 1,
-    unit_price: 3200.0,
-    total_price: 3200.0,
-    customer_id: 204,
-    added_at: "2024-01-17T09:15:00Z",
-    updated_at: "2024-01-17T09:15:00Z",
-  },
-  {
-    _id: 6,
-    product_id: 106,
-    product_name: "Apple Watch Series 9",
-    product_image: "/images/apple-watch.jpg",
-    quantity: 2,
-    unit_price: 1800.0,
-    total_price: 3600.0,
-    customer_id: 205,
-    added_at: "2024-01-18T13:20:00Z",
-    updated_at: "2024-01-18T13:20:00Z",
-  },
-  {
-    _id: 7,
-    product_id: 107,
-    product_name: "Sony WH-1000XM5",
-    product_image: "/images/sony-headphones.jpg",
-    quantity: 1,
-    unit_price: 950.0,
-    total_price: 950.0,
-    customer_id: 206,
-    added_at: "2024-01-12T08:45:00Z",
-    updated_at: "2024-01-12T08:45:00Z",
-  },
-  {
-    _id: 8,
-    product_id: 108,
-    product_name: "Dell XPS 13",
-    product_image: "/images/dell-xps.jpg",
-    quantity: 1,
-    unit_price: 7200.0,
-    total_price: 7200.0,
-    customer_id: 207,
-    added_at: "2024-01-19T15:10:00Z",
-    updated_at: "2024-01-19T15:10:00Z",
-  },
-  {
-    _id: 9,
-    product_id: 109,
-    product_name: "Nintendo Switch OLED",
-    product_image: "/images/nintendo-switch.jpg",
-    quantity: 1,
-    unit_price: 1400.0,
-    total_price: 1400.0,
-    customer_id: 208,
-    added_at: "2024-01-20T12:30:00Z",
-    updated_at: "2024-01-20T12:30:00Z",
-  },
-  {
-    _id: 10,
-    product_id: 110,
-    product_name: "GoPro Hero 11",
-    product_image: "/images/gopro-hero.jpg",
-    quantity: 1,
-    unit_price: 2100.0,
-    total_price: 2100.0,
-    customer_id: 209,
-    added_at: "2024-01-21T17:45:00Z",
-    updated_at: "2024-01-21T17:45:00Z",
-  },
-];
-
 const Cart = () => {
   const theme = useTheme();
-  const { data: cartItems, isLoading, refetch } = useGetCartQuery();
+  const { data: cartItems, isLoading, error, refetch } = useGetCartQuery();
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
@@ -149,62 +25,87 @@ const Cart = () => {
     // Add your delete logic here
   };
 
-  // Use dummy data if API data is not available
-  const cartData =
-    cartItems && cartItems.length > 0 ? cartItems : dummyCartItems;
+  // Handle API error
+  if (error) {
+    console.error("Error fetching cart data:", error);
+  }
 
   const columns = [
-    { field: "_id", headerName: "ID", flex: 0.5 },
-    { field: "product_id", headerName: "Product ID", flex: 0.8 },
-    { field: "product_name", headerName: "Product Name", flex: 1.5 },
+    { field: "_id", headerName: "Cart ID", flex: 0.8 },
     {
-      field: "product_image",
-      headerName: "Product Image",
+      field: "user.firstName",
+      headerName: "Customer First Name",
       flex: 1,
+      valueGetter: (params) => params.row.user?.firstName || "N/A",
+    },
+    {
+      field: "user.lastName",
+      headerName: "Customer Last Name",
+      flex: 1,
+      valueGetter: (params) => params.row.user?.lastName || "N/A",
+    },
+    {
+      field: "user.email",
+      headerName: "Customer Email",
+      flex: 1.5,
+      valueGetter: (params) => params.row.user?.email || "N/A",
+    },
+    {
+      field: "user.phoneNumber",
+      headerName: "Phone Number",
+      flex: 1,
+      valueGetter: (params) => params.row.user?.phoneNumber || "N/A",
+    },
+    {
+      field: "user.city",
+      headerName: "City",
+      flex: 0.8,
+      valueGetter: (params) => params.row.user?.city || "N/A",
+    },
+    {
+      field: "items",
+      headerName: "Items Count",
+      flex: 0.8,
+      valueGetter: (params) => params.row.items?.length || 0,
+    },
+    {
+      field: "total",
+      headerName: "Total (DT)",
+      flex: 1,
+      valueFormatter: (params) => `${params.value?.toFixed(2) || "0.00"} DT`,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 0.8,
       renderCell: (params) => (
         <Box
-          component="img"
-          src={params.value || "/images/placeholder.jpg"}
-          alt="Product"
           sx={{
-            width: 50,
-            height: 50,
-            borderRadius: "8px",
-            objectFit: "cover",
+            backgroundColor: params.value === "active" ? "#4caf50" : "#f44336",
+            color: "white",
+            padding: "4px 8px",
+            borderRadius: "4px",
+            fontSize: "0.75rem",
+            fontWeight: "bold",
           }}
-          onError={(e) => {
-            e.target.src = "/images/placeholder.jpg";
-          }}
-        />
+        >
+          {params.value}
+        </Box>
       ),
     },
-    { field: "quantity", headerName: "Quantity", flex: 0.8 },
     {
-      field: "unit_price",
-      headerName: "Unit Price (DT)",
-      flex: 1,
-      valueFormatter: (params) => `${params.value.toFixed(2)} DT`,
-    },
-    {
-      field: "total_price",
-      headerName: "Total Price (DT)",
-      flex: 1,
-      valueFormatter: (params) => `${params.value.toFixed(2)} DT`,
-    },
-    { field: "customer_id", headerName: "Customer ID", flex: 0.8 },
-    {
-      field: "added_at",
-      headerName: "Added At",
+      field: "createdAt",
+      headerName: "Created At",
       flex: 1.2,
       valueFormatter: (params) =>
-        new Date(params.value).toLocaleDateString("en-GB"),
+        params.value ? new Date(params.value).toLocaleDateString("en-GB") : "",
     },
     {
-      field: "updated_at",
+      field: "updatedAt",
       headerName: "Updated At",
       flex: 1.2,
       valueFormatter: (params) =>
-        new Date(params.value).toLocaleDateString("en-GB"),
+        params.value ? new Date(params.value).toLocaleDateString("en-GB") : "",
     },
     {
       field: "edit",
@@ -272,9 +173,9 @@ const Cart = () => {
         }}
       >
         <DataGrid
-          loading={isLoading || !cartData}
+          loading={isLoading}
           getRowId={(row) => row._id}
-          rows={cartData || []}
+          rows={cartItems || []}
           columns={columns}
           components={{ Toolbar: DataGridCustomToolbar }}
           componentsProps={{

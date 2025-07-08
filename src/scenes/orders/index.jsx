@@ -9,145 +9,28 @@ import { tokensDark } from "theme";
 import { useGetOrdersQuery } from "state/ordersApi";
 import { useState } from "react";
 
-// Dummy orders data
-const dummyOrders = [
-  {
-    _id: 1,
-    state: "pending",
-    status: "pending",
-    base_grand_total: 1250.5,
-    created_at: "2024-01-15T10:30:00Z",
-    updated_at: "2024-01-15T10:30:00Z",
-    customer_id: 101,
-    discount_amount: 50.0,
-    store_id: 1,
-    items: [
-      { product_id: 1, quantity: 2, price: 600.0 },
-      { product_id: 2, quantity: 1, price: 650.5 },
-    ],
-  },
-  {
-    _id: 2,
-    state: "complete",
-    status: "complete",
-    base_grand_total: 890.25,
-    created_at: "2024-01-14T14:20:00Z",
-    updated_at: "2024-01-18T09:15:00Z",
-    customer_id: 102,
-    discount_amount: 25.0,
-    store_id: 1,
-    items: [{ product_id: 3, quantity: 1, price: 890.25 }],
-  },
-  {
-    _id: 3,
-    state: "processing",
-    status: "processing",
-    base_grand_total: 2100.75,
-    created_at: "2024-01-16T11:45:00Z",
-    updated_at: "2024-01-16T11:45:00Z",
-    customer_id: 103,
-    discount_amount: 100.0,
-    store_id: 2,
-    items: [
-      { product_id: 4, quantity: 3, price: 700.25 },
-      { product_id: 5, quantity: 2, price: 200.25 },
-    ],
-  },
-  {
-    _id: 4,
-    state: "canceled",
-    status: "canceled",
-    base_grand_total: 675.0,
-    created_at: "2024-01-13T16:30:00Z",
-    updated_at: "2024-01-13T17:00:00Z",
-    customer_id: 104,
-    discount_amount: 0.0,
-    store_id: 1,
-    items: [{ product_id: 6, quantity: 1, price: 675.0 }],
-  },
-  {
-    _id: 5,
-    state: "complete",
-    status: "shipped",
-    base_grand_total: 1850.3,
-    created_at: "2024-01-17T09:15:00Z",
-    updated_at: "2024-01-25T14:30:00Z",
-    customer_id: 105,
-    discount_amount: 75.0,
-    store_id: 2,
-    items: [
-      { product_id: 7, quantity: 2, price: 925.15 },
-      { product_id: 8, quantity: 1, price: 1000.0 },
-    ],
-  },
-  {
-    _id: 6,
-    state: "pending",
-    status: "pending",
-    base_grand_total: 950.8,
-    created_at: "2024-01-18T13:20:00Z",
-    updated_at: "2024-01-18T13:20:00Z",
-    customer_id: 106,
-    discount_amount: 30.0,
-    store_id: 1,
-    items: [{ product_id: 9, quantity: 1, price: 950.8 }],
-  },
-  {
-    _id: 7,
-    state: "complete",
-    status: "delivered",
-    base_grand_total: 3200.45,
-    created_at: "2024-01-12T08:45:00Z",
-    updated_at: "2024-01-16T11:20:00Z",
-    customer_id: 107,
-    discount_amount: 150.0,
-    store_id: 2,
-    items: [
-      { product_id: 10, quantity: 4, price: 800.11 },
-      { product_id: 11, quantity: 2, price: 50.0 },
-    ],
-  },
-  {
-    _id: 8,
-    state: "processing",
-    status: "processing",
-    base_grand_total: 750.2,
-    created_at: "2024-01-19T15:10:00Z",
-    updated_at: "2024-01-19T15:10:00Z",
-    customer_id: 108,
-    discount_amount: 20.0,
-    store_id: 1,
-    items: [{ product_id: 12, quantity: 3, price: 250.07 }],
-  },
-  {
-    _id: 9,
-    state: "complete",
-    status: "shipped",
-    base_grand_total: 1450.9,
-    created_at: "2024-01-20T12:30:00Z",
-    updated_at: "2024-01-28T10:15:00Z",
-    customer_id: 109,
-    discount_amount: 60.0,
-    store_id: 2,
-    items: [{ product_id: 13, quantity: 2, price: 725.45 }],
-  },
-  {
-    _id: 10,
-    state: "pending",
-    status: "pending",
-    base_grand_total: 890.6,
-    created_at: "2024-01-21T17:45:00Z",
-    updated_at: "2024-01-21T17:45:00Z",
-    customer_id: 110,
-    discount_amount: 40.0,
-    store_id: 1,
-    items: [{ product_id: 14, quantity: 1, price: 890.6 }],
-  },
-];
-
 const columns = [
-  { field: "_id", headerName: "ID", flex: 0.5 },
-
+  { field: "_id", headerName: "Order ID", flex: 0.8 },
+  {
+    field: "state",
+    headerName: "State",
+    flex: 0.8,
+    renderCell: (params) => (
+      <Box
+        sx={{
+          backgroundColor: "#2196f3",
+          color: "white",
+          padding: "4px 8px",
+          borderRadius: "4px",
+          fontSize: "0.8rem",
+          fontWeight: "bold",
+          textTransform: "capitalize",
+        }}
+      >
+        {params.value}
+      </Box>
+    ),
+  },
   {
     field: "status",
     headerName: "Status",
@@ -156,7 +39,7 @@ const columns = [
       <Box
         sx={{
           backgroundColor:
-            params.value === "delivered"
+            params.value === "completed"
               ? "#4caf50"
               : params.value === "shipped"
               ? "#2196f3"
@@ -178,19 +61,18 @@ const columns = [
     ),
   },
   {
-    field: "base_grand_total",
+    field: "total",
     headerName: "Total Amount (DT)",
     flex: 1,
-    valueFormatter: (params) => `${params.value.toFixed(2)} DT`,
+    valueFormatter: (params) => `${params.value?.toFixed(2) || "0.00"} DT`,
   },
   {
     field: "discount_amount",
     headerName: "Discount (DT)",
     flex: 1,
-    valueFormatter: (params) => `${params.value.toFixed(2)} DT`,
+    valueFormatter: (params) => `${params.value?.toFixed(2) || "0.00"} DT`,
   },
   { field: "customer_id", headerName: "Customer ID", flex: 0.8 },
-  { field: "store_id", headerName: "Store ID", flex: 0.5 },
   {
     field: "items",
     headerName: "Items Count",
@@ -198,25 +80,24 @@ const columns = [
     valueGetter: (params) => params.row.items?.length || 0,
   },
   {
-    field: "created_at",
-    headerName: "Created At",
+    field: "delivery_date",
+    headerName: "Delivery Date",
     flex: 1.2,
     valueFormatter: (params) =>
-      new Date(params.value).toLocaleDateString("en-GB"),
+      params.value ? new Date(params.value).toLocaleDateString("en-GB") : "N/A",
   },
   {
-    field: "updated_at",
-    headerName: "Updated At",
-    flex: 1.2,
-    valueFormatter: (params) =>
-      new Date(params.value).toLocaleDateString("en-GB"),
+    field: "lifecycle",
+    headerName: "Lifecycle Events",
+    flex: 0.8,
+    valueGetter: (params) => params.row.lifecycle?.length || 0,
   },
   {
     field: "edit",
     headerName: "Edit",
     flex: 0.25,
     renderCell: (params) => (
-      <IconButton onClick={() => console.log(params.row)}>
+      <IconButton onClick={() => console.log("'dle")}>
         <EditIcon />
       </IconButton>
     ),
@@ -226,7 +107,7 @@ const columns = [
     headerName: "Delete",
     flex: 0.25,
     renderCell: (params) => (
-      <IconButton onClick={() => console.log(params.row.id)}>
+      <IconButton onClick={() => console.log("'dle")}>
         <DeleteIcon />
       </IconButton>
     ),
@@ -235,7 +116,7 @@ const columns = [
 
 const Orders = () => {
   const theme = useTheme();
-  const { data: orders, isLoading, refetch } = useGetOrdersQuery();
+  const { data: orders, isLoading, error, refetch } = useGetOrdersQuery();
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
@@ -249,8 +130,10 @@ const Orders = () => {
     // Add your delete logic here
   };
 
-  // Use dummy data if API data is not available
-  const ordersData = orders && orders.length > 0 ? orders : dummyOrders;
+  // Handle API error
+  if (error) {
+    console.error("Error fetching orders data:", error);
+  }
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -296,9 +179,9 @@ const Orders = () => {
         }}
       >
         <DataGrid
-          loading={isLoading || !ordersData}
+          loading={isLoading}
           getRowId={(row) => row._id}
-          rows={ordersData || []}
+          rows={orders || []}
           columns={columns}
           components={{ Toolbar: DataGridCustomToolbar }}
           componentsProps={{

@@ -4,11 +4,18 @@ export const cartApi = createApi({
   reducerPath: "cartApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000/kamarket",
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ["Cart"],
   endpoints: (build) => ({
     getCart: build.query({
-      query: () => "cart",
+      query: () => "cart/all",
       providesTags: ["Cart"],
     }),
     getCartById: build.query({

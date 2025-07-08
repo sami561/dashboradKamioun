@@ -37,6 +37,10 @@ import {
   useGetCountCustomersQuery,
   useGetUsersQuery,
 } from "state/userApi";
+import {
+  useGetCompletedOrdersTotalQuery,
+  useGetGvmPerMonthQuery,
+} from "state/ordersApi";
 
 // Dummy data for users
 const dummyUsers = [
@@ -216,22 +220,6 @@ const columns = [
   { field: "enabled", headerName: "Enabled", flex: 1 },
 ];
 
-const dummySalesData = {
-  monthlyData: [
-    { month: "Jan", totalSales: 187654321, totalUnits: 46 },
-    { month: "Feb", totalSales: 134567890, totalUnits: 33 },
-    { month: "Mar", totalSales: 245678901, totalUnits: 61 },
-    { month: "Apr", totalSales: 156789012, totalUnits: 39 },
-    { month: "May", totalSales: 223456789, totalUnits: 55 },
-    { month: "Jun", totalSales: 198765432, totalUnits: 49 },
-    { month: "Jul", totalSales: 211234567, totalUnits: 52 },
-    { month: "Aug", totalSales: 176543210, totalUnits: 44 },
-    { month: "Sep", totalSales: 231234568, totalUnits: 57 },
-    { month: "Oct", totalSales: 143456789, totalUnits: 35 },
-    { month: "Nov", totalSales: 256789013, totalUnits: 64 },
-    { month: "Dec", totalSales: 207654321, totalUnits: 51 },
-  ],
-};
 // Dummy counts for StatBox
 const dummyUserCount = { count: 10 };
 const dummyAdminCount = { count: 2 };
@@ -244,9 +232,22 @@ const Dashboard = () => {
   const { data: adminCount } = useGetAdminCountQuery();
   console.log("🚀 ~ Dashboard ~ adminCount:", adminCount);
   const { data: userCount, isLoading2 } = useGetCountCustomersQuery();
-  const { data: bankCount, isLoading4 } = useGetBankCountQuery();
   const { data, isLoading } = useGetUserQuery();
   console.log("🚀 ~ Dashboard ~ data:", data);
+  const {
+    data: completedOrdersTotal,
+    isLoading: isLoadingCompletedOrdersTotal,
+  } = useGetCompletedOrdersTotalQuery();
+  const { data: gvmPerMonth, isLoading: isLoadingGvmPerMonth } =
+    useGetGvmPerMonthQuery();
+
+  // Transform gvmPerMonth to the format expected by BreakdownChart
+  const gvmChartData = gvmPerMonth
+    ? gvmPerMonth.map((item) => ({
+        month: `${item._id.year}-${String(item._id.month).padStart(2, "0")}`,
+        gvm: item.gvm,
+      }))
+    : [];
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -312,8 +313,12 @@ const Dashboard = () => {
           <OverviewChart view="sales" isDashboard={true} />
         </Box>
         <StatBox
-          title="daily orders"
-          value={`87654321  DT`}
+          title="orders"
+          value={
+            isLoadingCompletedOrdersTotal
+              ? "Loading..."
+              : `${completedOrdersTotal?.total ?? 0} DT`
+          }
           increase=""
           description="orders"
           icon={
@@ -368,15 +373,15 @@ const Dashboard = () => {
           borderRadius="0.55rem"
         >
           <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
-            User by Category
+            GVM per Month
           </Typography>
-          <BreakdownChart isDashboard={true} data={dummySalesData} />
+          <BreakdownChart isDashboard={true} data={gvmChartData} />
           <Typography
             p="0 0.6rem"
             fontSize="0.8rem"
             sx={{ color: theme.palette.secondary[200] }}
           >
-            this chart represent how mush user we have by role
+            This chart represents the Gross Merchandise Value (GVM) per month.
           </Typography>
         </Box>
       </Box>
