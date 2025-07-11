@@ -13,6 +13,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Visibility as ViewIcon,
+  Campaign as CampaignIcon,
 } from "@mui/icons-material";
 
 const AdCard = ({ data }) => {
@@ -95,16 +96,56 @@ const AdCard = ({ data }) => {
         },
       }}
     >
-      <CardMedia
-        component="img"
-        height="200"
-        image={image || "/images/ad-placeholder.jpg"}
-        alt={title}
-        sx={{ objectFit: "cover" }}
-        onError={(e) => {
-          e.target.src = "/images/ad-placeholder.jpg";
-        }}
-      />
+      {image ? (
+        <CardMedia
+          component="img"
+          height="200"
+          image={image}
+          alt={title}
+          sx={{ objectFit: "cover" }}
+          onError={(e) => {
+            e.target.style.display = "none";
+            e.target.nextSibling.style.display = "flex";
+          }}
+        />
+      ) : null}
+
+      {!image && (
+        <Box
+          sx={{
+            height: 200,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "grey.100",
+            borderBottom: "1px solid",
+            borderColor: "divider",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <CampaignIcon
+              sx={{
+                fontSize: 48,
+                color: "text.secondary",
+              }}
+            />
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ textAlign: "center" }}
+            >
+              No Image Available
+            </Typography>
+          </Box>
+        </Box>
+      )}
 
       <CardContent sx={{ flexGrow: 1, p: 2 }}>
         <Box

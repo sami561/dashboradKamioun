@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const ordersApi = createApi({
   reducerPath: "ordersApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://http://34.173.189.86/kamarket/kamarket/kamarket",
+    baseUrl: "http://localhost:3000/kamarket",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
       if (token) {
@@ -61,6 +61,22 @@ export const ordersApi = createApi({
       query: () => "orders/gvm-per-month",
       providesTags: ["Orders"],
     }),
+    updateOrderState: build.mutation({
+      query: ({ id, state }) => ({
+        url: `orders/${id}/state`,
+        method: "PUT",
+        body: { state },
+      }),
+      invalidatesTags: ["Orders"],
+    }),
+    updateOrderStatus: build.mutation({
+      query: ({ id, status }) => ({
+        url: `orders/${id}/status`,
+        method: "PUT",
+        body: { status },
+      }),
+      invalidatesTags: ["Orders"],
+    }),
   }),
 });
 
@@ -74,4 +90,6 @@ export const {
   useGetOrdersByStatusQuery,
   useGetCompletedOrdersTotalQuery,
   useGetGvmPerMonthQuery,
+  useUpdateOrderStateMutation,
+  useUpdateOrderStatusMutation,
 } = ordersApi;

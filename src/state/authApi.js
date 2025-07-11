@@ -1,11 +1,11 @@
 // src/features/auth/authApi.js
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { setToken } from "./authSlice";
+import { setToken, setUser } from "./authSlice";
 
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://http://34.173.189.86/kamarket/kamarket/",
+    baseUrl: "http://localhost:3000/",
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth.token;
       if (token) {
@@ -26,8 +26,12 @@ export const authApi = createApi({
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled;
+          console.log("🚀 ~ onQueryStarted: ~ data:", data);
+
           dispatch(setToken(data.token));
+          dispatch(setUser(data.payload));
           localStorage.setItem("accessToken", data.token);
+          localStorage.setItem("userData", JSON.stringify(data.payload));
         } catch (error) {
           console.error("Login failed:", error);
         }
@@ -56,6 +60,8 @@ export const authApi = createApi({
       invalidatesTags: ["Auth"],
       onQueryStarted: async (arg, { dispatch }) => {
         dispatch(setToken(null)); // Clear the token on logout
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("userData");
       },
     }),
   }),

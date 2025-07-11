@@ -1,7 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { initializeAuth } from "state/authSlice";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { themeSettings } from "theme";
 import Layout from "scenes/layout";
@@ -16,25 +17,29 @@ import Monthly from "scenes/monthly";
 import Breakdown from "scenes/breakdown";
 import Admin from "scenes/admin";
 import Performance from "scenes/performance";
-import Governorate from "scenes/Governorate";
 import Auth from "scenes/auth";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CreditType from "scenes/CreditType";
-import Request from "scenes/Request";
-import User from "scenes/user/Index";
-import Manager from "scenes/manager/Index";
 import Category from "scenes/category";
 import Brand from "scenes/brand";
 import Supplier from "scenes/supplier";
 import Ads from "scenes/ads";
 import Cart from "scenes/cart";
 import Orders from "scenes/orders";
+import Profile from "scenes/profile";
+import OrderOperation from "scenes/orderOperation";
+import Vendors from "scenes/vendors";
+import OperationsTeam from "scenes/operationsTeam";
 
 function App() {
+  const dispatch = useDispatch();
   const mode = useSelector((state) => state.global.mode);
   const token = useSelector((state) => state.auth.token);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+
+  useEffect(() => {
+    dispatch(initializeAuth());
+  }, [dispatch]);
 
   return (
     <div className="app">
@@ -121,31 +126,7 @@ function App() {
                   token ? <Performance /> : <Navigate to="/auth" replace />
                 }
               />
-              <Route
-                path="/governorate"
-                element={
-                  token ? <Governorate /> : <Navigate to="/auth" replace />
-                }
-              />
 
-              <Route
-                path="/creditType"
-                element={
-                  token ? <CreditType /> : <Navigate to="/auth" replace />
-                }
-              />
-              <Route
-                path="/request"
-                element={token ? <Request /> : <Navigate to="/auth" replace />}
-              />
-              <Route
-                path="/client"
-                element={token ? <User /> : <Navigate to="/auth" replace />}
-              />
-              <Route
-                path="/manager"
-                element={token ? <Manager /> : <Navigate to="/auth" replace />}
-              />
               <Route
                 path="/cart"
                 element={token ? <Cart /> : <Navigate to="/auth" replace />}
@@ -157,6 +138,32 @@ function App() {
               <Route
                 path="/ads"
                 element={token ? <Ads /> : <Navigate to="/auth" replace />}
+              />
+              <Route
+                path="/profile"
+                element={token ? <Profile /> : <Navigate to="/auth" replace />}
+              />
+              <Route
+                path="/order-operation"
+                element={
+                  token &&
+                  JSON.parse(localStorage.getItem("userData"))?.accountType ===
+                    "operation" ? (
+                    <OrderOperation />
+                  ) : (
+                    <Navigate to="/dashboard" replace />
+                  )
+                }
+              />
+              <Route
+                path="/vendors"
+                element={token ? <Vendors /> : <Navigate to="/auth" replace />}
+              />
+              <Route
+                path="/operations-team"
+                element={
+                  token ? <OperationsTeam /> : <Navigate to="/auth" replace />
+                }
               />
             </Route>
           </Routes>

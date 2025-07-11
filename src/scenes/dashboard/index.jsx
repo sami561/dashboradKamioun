@@ -24,200 +24,56 @@ import { useGetDashboardQuery } from "state/api";
 import StatBox from "components/StatBox";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import {
-  useGetBankCountQuery,
-  useGetCountManagerQuery,
-  useGetRequestQuery,
-  useGetallUserCountQuery,
-  useGetUserQuery,
-} from "state/apiSpring";
+
 import PersonIcon from "@mui/icons-material/Person";
 import {
   useGetAdminCountQuery,
   useGetCountCustomersQuery,
   useGetUsersQuery,
+  useGetAllUsersQuery,
+  useGetAccountTypeCountsQuery,
 } from "state/userApi";
 import {
   useGetCompletedOrdersTotalQuery,
   useGetGvmPerMonthQuery,
 } from "state/ordersApi";
 
-// Dummy data for users
-const dummyUsers = [
-  {
-    id: 1,
-    fullName: "John Doe",
-    email: "john.doe@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 2,
-    fullName: "Jane Smith",
-    email: "jane.smith@example.com",
-    roles: [{ name: "Admin" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 3,
-    fullName: "Alice Johnson",
-    email: "alice.johnson@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: true,
-    enabled: false,
-  },
-  {
-    id: 4,
-    fullName: "Mohammed Al-Farsi",
-    email: "mohammed.alfarsi@example.com",
-    roles: [{ name: "Admin" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 5,
-    fullName: "Fatima Zahra",
-    email: "fatima.zahra@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 6,
-    fullName: "Ahmed Hassan",
-    email: "ahmed.hassan@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: true,
-    enabled: false,
-  },
-  {
-    id: 7,
-    fullName: "Robert Wilson",
-    email: "robert.wilson@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 8,
-    fullName: "Aisha Mohammed",
-    email: "aisha.mohammed@example.com",
-    roles: [{ name: "Admin" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 9,
-    fullName: "Sarah Williams",
-    email: "sarah.williams@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 10,
-    fullName: "Omar Khaled",
-    email: "omar.khaled@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 11,
-    fullName: "Layla Ahmed",
-    email: "layla.ahmed@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: true,
-    enabled: false,
-  },
-  {
-    id: 12,
-    fullName: "Michael Brown",
-    email: "michael.brown@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 13,
-    fullName: "Youssef Mahmoud",
-    email: "youssef.mahmoud@example.com",
-    roles: [{ name: "Admin" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 14,
-    fullName: "Emily Davis",
-    email: "emily.davis@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 15,
-    fullName: "Khalid Abdullah",
-    email: "khalid.abdullah@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 16,
-    fullName: "Noor Ibrahim",
-    email: "noor.ibrahim@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: true,
-    enabled: false,
-  },
-  {
-    id: 17,
-    fullName: "David Miller",
-    email: "david.miller@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 18,
-    fullName: "Mariam Ali",
-    email: "mariam.ali@example.com",
-    roles: [{ name: "Admin" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 19,
-    fullName: "James Taylor",
-    email: "james.taylor@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: false,
-    enabled: true,
-  },
-  {
-    id: 20,
-    fullName: "Samir Nasr",
-    email: "samir.nasr@example.com",
-    roles: [{ name: "User" }],
-    accountLocked: false,
-    enabled: true,
-  },
-];
-
 const columns = [
-  { field: "id", headerName: "ID", flex: 1 },
-  { field: "fullName", headerName: "Full Name", flex: 1 },
-  { field: "email", headerName: "Email", flex: 1 },
+  { field: "_id", headerName: "ID", flex: 1 },
   {
-    field: "roles",
-    headerName: "Role",
+    field: "fullName",
+    headerName: "Full Name",
     flex: 1,
-    valueGetter: (params) => params.row.roles[0]?.name,
+    valueGetter: (params) =>
+      `${params.row.firstName || ""} ${params.row.lastName || ""}`.trim(),
   },
-  { field: "accountLocked", headerName: "Account Locked", flex: 1 },
-  { field: "enabled", headerName: "Enabled", flex: 1 },
+  { field: "email", headerName: "Email", flex: 1 },
+  { field: "phoneNumber", headerName: "Phone", flex: 1 },
+  {
+    field: "accountType",
+    headerName: "Account Type",
+    flex: 1,
+    valueGetter: (params) => params.row.account?.accountType || "N/A",
+  },
+  {
+    field: "active",
+    headerName: "Active",
+    flex: 1,
+    renderCell: (params) => (
+      <Box
+        sx={{
+          backgroundColor: params.value ? "success.main" : "error.main",
+          color: "white",
+          padding: "4px 8px",
+          borderRadius: "4px",
+          fontSize: "0.75rem",
+        }}
+      >
+        {params.value ? "Active" : "Inactive"}
+      </Box>
+    ),
+  },
+  { field: "city", headerName: "City", flex: 1 },
 ];
 
 // Dummy counts for StatBox
@@ -232,20 +88,32 @@ const Dashboard = () => {
   const { data: adminCount } = useGetAdminCountQuery();
   console.log("🚀 ~ Dashboard ~ adminCount:", adminCount);
   const { data: userCount, isLoading2 } = useGetCountCustomersQuery();
-  const { data, isLoading } = useGetUserQuery();
-  console.log("🚀 ~ Dashboard ~ data:", data);
+  const { data: allUsers, isLoading: isLoadingAllUsers } =
+    useGetAllUsersQuery();
+  console.log("🚀 ~ Dashboard ~ allUsers:", allUsers);
   const {
     data: completedOrdersTotal,
     isLoading: isLoadingCompletedOrdersTotal,
   } = useGetCompletedOrdersTotalQuery();
   const { data: gvmPerMonth, isLoading: isLoadingGvmPerMonth } =
     useGetGvmPerMonthQuery();
+  const { data: accountTypeCounts, isLoading: isLoadingAccountTypes } =
+    useGetAccountTypeCountsQuery();
 
   // Transform gvmPerMonth to the format expected by BreakdownChart
   const gvmChartData = gvmPerMonth
     ? gvmPerMonth.map((item) => ({
         month: `${item._id.year}-${String(item._id.month).padStart(2, "0")}`,
         gvm: item.gvm,
+      }))
+    : [];
+
+  // Transform account type counts to the format expected by BreakdownChart
+  const accountTypeChartData = accountTypeCounts
+    ? Object.entries(accountTypeCounts).map(([type, count]) => ({
+        id: type.charAt(0).toUpperCase() + type.slice(1),
+        label: type.charAt(0).toUpperCase() + type.slice(1),
+        value: count,
       }))
     : [];
 
@@ -359,9 +227,9 @@ const Dashboard = () => {
           }}
         >
           <DataGrid
-            loading={isLoading}
-            getRowId={(row) => row.id}
-            rows={dummyUsers}
+            loading={isLoadingAllUsers}
+            getRowId={(row) => row._id}
+            rows={allUsers || []}
             columns={columns}
           />
         </Box>
@@ -373,15 +241,15 @@ const Dashboard = () => {
           borderRadius="0.55rem"
         >
           <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
-            GVM per Month
+            Account Types Distribution
           </Typography>
-          <BreakdownChart isDashboard={true} data={gvmChartData} />
+          <BreakdownChart isDashboard={true} data={accountTypeChartData} />
           <Typography
             p="0 0.6rem"
             fontSize="0.8rem"
             sx={{ color: theme.palette.secondary[200] }}
           >
-            This chart represents the Gross Merchandise Value (GVM) per month.
+            This chart shows the distribution of users by account type.
           </Typography>
         </Box>
       </Box>

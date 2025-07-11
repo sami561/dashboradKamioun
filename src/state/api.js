@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_BASE_URL,
+    baseUrl: "http://localhost:3000/",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
       if (token) {
@@ -25,10 +25,7 @@ export const api = createApi({
     "Ads",
   ],
   endpoints: (build) => ({
-    getUser: build.query({
-      query: (id) => `general/user/${id}`,
-      providesTags: ["User"],
-    }),
+   
     getProducts: build.query({
       query: () => "client/products",
       providesTags: ["Products"],

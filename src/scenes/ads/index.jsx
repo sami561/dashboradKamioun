@@ -2,99 +2,32 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, CircularProgress, Grid } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import Header from "../../components/Header";
-import AdCard from "../../components/AdCard";
-import Pagination from "../../components/Pagination";
+import AdCard from "./components/AdCard";
 import CreateAdModal from "../../components/CreateAdModal";
+import { useGetAdsQuery } from "state/adsApi";
 
 const Ads = () => {
   const [showModal, setShowModal] = useState(false);
-  const [data, setData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
 
-  // Dummy data for demonstration
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // Use RTK Query for API calls
+  const { data: adsResponse, isLoading, error, refetch } = useGetAdsQuery();
 
-  // Simulate API call
-  const fetchAds = async (page = 1) => {
-    setLoading(true);
-    try {
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Dummy data
-      const dummyAds = [
-        {
-          id: 1,
-          title: "Summer Sale - Electronics",
-          description:
-            "Get amazing discounts on all electronics this summer. Up to 50% off on smartphones, laptops, and more!",
-          category: "electronics",
-          targetAudience: "all",
-          budget: 5000.0,
-          startDate: "2024-06-01",
-          endDate: "2024-08-31",
-          image: "/images/electronics-sale.jpg",
-          status: "active",
-          views: 15420,
-          clicks: 1234,
-        },
-        {
-          id: 2,
-          title: "Fashion Collection 2024",
-          description:
-            "Discover the latest fashion trends for 2024. New arrivals every week with exclusive designs.",
-          category: "fashion",
-          targetAudience: "youth",
-          budget: 3000.0,
-          startDate: "2024-01-01",
-          endDate: "2024-12-31",
-          image: "/images/fashion-collection.jpg",
-          status: "active",
-          views: 8920,
-          clicks: 567,
-        },
-        {
-          id: 3,
-          title: "Home & Garden Essentials",
-          description:
-            "Transform your living space with our premium home and garden products. Quality guaranteed.",
-          category: "home",
-          targetAudience: "families",
-          budget: 2500.0,
-          startDate: "2024-03-01",
-          endDate: "2024-05-31",
-          image: "/images/home-garden.jpg",
-          status: "paused",
-          views: 6540,
-          clicks: 432,
-        },
-      ];
-
-      setData(dummyAds);
-      setTotalPages(3);
-      setError(null);
-    } catch (err) {
-      setError({ message: "Failed to fetch advertisements" });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // The new API returns an array of ad objects directly
+  const data = Array.isArray(adsResponse) ? adsResponse : [];
 
   useEffect(() => {
-    fetchAds(currentPage);
-  }, [currentPage, showModal]);
-
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
+    if (showModal === false) {
+      refetch();
     }
-  };
+  }, [showModal, refetch]);
 
-  if (error) {
-    return <Typography color="error">Error: {error.message}</Typography>;
-  }
+  /*   if (error) {
+    return (
+      <Typography color="error">
+        Error: {error.data?.message || error.message || "Failed to fetch advertisements"}
+      </Typography>
+    );
+  } */
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -133,7 +66,7 @@ const Ads = () => {
             </Box>
           </Grid>
 
-          {loading ? (
+          {isLoading ? (
             <Grid item xs={12}>
               <Box display="flex" justifyContent="center">
                 <CircularProgress />
@@ -141,7 +74,7 @@ const Ads = () => {
             </Grid>
           ) : data?.length > 0 ? (
             data.map((ad, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={ad._id || index}>
                 <AdCard data={ad} />
               </Grid>
             ))
@@ -153,14 +86,6 @@ const Ads = () => {
             </Grid>
           )}
         </Grid>
-
-        <Box mt={4} display="flex" justifyContent="center">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </Box>
       </Box>
 
       <CreateAdModal showModal={showModal} setShowModal={setShowModal} />

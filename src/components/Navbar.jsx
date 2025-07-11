@@ -6,6 +6,7 @@ import {
   Search,
   SettingsOutlined,
   ArrowDropDownOutlined,
+  AccountCircle,
 } from "@mui/icons-material";
 import FlexBetween from "components/FlexBetween";
 import { useDispatch } from "react-redux";
@@ -24,6 +25,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const dispatch = useDispatch();
@@ -31,9 +33,21 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const isOpen = Boolean(anchorEl);
+  const [imageError, setImageError] = useState(false);
+
+  // Get user data from Redux state
+  const authUser = useSelector((state) => state.auth.user);
+
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    // Clear auth data
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
     window.location.reload();
   };
 
@@ -73,9 +87,6 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
               <LightModeOutlined sx={{ fontSize: "25px" }} />
             )}
           </IconButton>
-          <IconButton>
-            <SettingsOutlined sx={{ fontSize: "25px" }} />
-          </IconButton>
 
           <FlexBetween>
             <Button
@@ -88,28 +99,35 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
                 gap: "1rem",
               }}
             >
-              <Box
-                component="img"
-                alt="profile"
-                src={profileImage}
-                height="32px"
-                width="32px"
-                borderRadius="50%"
-                sx={{ objectFit: "cover" }}
-              />
+              {imageError || !authUser?.profilePhoto ? (
+                <AccountCircle sx={{ fontSize: 32, borderRadius: "50%" }} />
+              ) : (
+                <Box
+                  component="img"
+                  alt="profile"
+                  src={authUser?.profilePhoto}
+                  height="32px"
+                  width="32px"
+                  borderRadius="50%"
+                  sx={{ objectFit: "cover" }}
+                  onError={() => setImageError(true)}
+                />
+              )}
               <Box textAlign="left">
                 <Typography
                   fontWeight="bold"
                   fontSize="0.85rem"
                   sx={{ color: theme.palette.secondary[100] }}
                 >
-                  sami
+                  {authUser
+                    ? `${authUser.firstName} ${authUser.lastName}`
+                    : "User"}
                 </Typography>
                 <Typography
                   fontSize="0.75rem"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
-                  Manager
+                  {authUser?.accountType || "User"}
                 </Typography>
               </Box>
               <ArrowDropDownOutlined
@@ -122,7 +140,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
               onClose={handleClose}
               anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-              <MenuItem onClick={handleClose}>Log Out</MenuItem>
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </Menu>
           </FlexBetween>
         </FlexBetween>

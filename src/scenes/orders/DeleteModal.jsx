@@ -1,26 +1,23 @@
 import React from "react";
 import { CloseOutlined } from "@mui/icons-material";
 import { Box, IconButton, Modal, Typography, Button } from "@mui/material";
-import httpClient from "utils/apiMethods";
 import { toast } from "react-toastify";
+import { useDeleteOrderMutation } from "state/ordersApi";
 
-const DeleteModal = ({ open, handleClose, row }) => {
-  console.log(row);
+const DeleteModal = ({ open, handleClose, order }) => {
+  const [deleteOrder] = useDeleteOrderMutation();
+
   const handleDelete = async () => {
-    console.log("Deleting row:", row);
     try {
-      const response = await httpClient.delete(
-        `api/v1/gouvernorat/delete/${row}`
-      );
-      toast.success("Row deleted");
-      console.log(response);
+      await deleteOrder(order._id).unwrap();
+      toast.success("Order deleted successfully");
+      handleClose();
     } catch (error) {
-      console.log(error.response?.data?.businessErrorDescription);
-      toast.error(error.response?.data?.businessErrorDescription);
+      toast.error(error.data?.message || "Failed to delete order");
     }
-
-    handleClose();
   };
+
+  if (!order) return null;
 
   return (
     <Modal
@@ -54,20 +51,27 @@ const DeleteModal = ({ open, handleClose, row }) => {
           <CloseOutlined />
         </IconButton>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Delete Row
+          Delete Order
         </Typography>
-        <Typography sx={{ mt: 2 }}>
-          Are you sure you want to delete this row? This action cannot be
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ mt: 1, mb: 2 }}
+        >
+          Order ID: {order._id}
+        </Typography>
+        <Typography sx={{ mt: 2, mb: 3 }}>
+          Are you sure you want to delete this order? This action cannot be
           undone.
         </Typography>
-        <Button
-          variant="contained"
-          color="error"
-          sx={{ mt: 2 }}
-          onClick={handleDelete}
-        >
-          Delete
-        </Button>
+        <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
+          <Button variant="outlined" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button variant="contained" color="error" onClick={handleDelete}>
+            Delete
+          </Button>
+        </Box>
       </Box>
     </Modal>
   );

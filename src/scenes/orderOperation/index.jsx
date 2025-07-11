@@ -3,43 +3,37 @@ import {
   Typography,
   useTheme,
   IconButton,
-  Button,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "components/Header";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Add, ViewList, ViewModule } from "@mui/icons-material";
-import { tokensDark } from "theme";
+import { ViewList, ViewModule } from "@mui/icons-material";
 import { useGetOrdersQuery } from "state/ordersApi";
 import { useState } from "react";
-import AddModal from "./AddModal";
-import UpdateModal from "./UpdateModal";
-import DeleteModal from "./DeleteModal";
-import CardView from "./CardView";
+import CardView from "../orders/CardView";
+import StateUpdateModal from "./StateUpdateModal";
+import StatusUpdateModal from "./StatusUpdateModal";
 
-const Orders = () => {
+const OrderOperation = () => {
   const theme = useTheme();
   const { data: orders, isLoading, error, refetch } = useGetOrdersQuery();
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [addModalOpen, setAddModalOpen] = useState(false);
-  const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [stateModalOpen, setStateModalOpen] = useState(false);
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [viewMode, setViewMode] = useState("grid"); // "grid" or "cards"
 
-  const handleUpdateModal = (row) => {
+  const handleStateUpdate = (row) => {
     setSelectedOrder(row);
-    setUpdateModalOpen(true);
+    setStateModalOpen(true);
   };
 
-  const handleDeleteModal = (row) => {
+  const handleStatusUpdate = (row) => {
     setSelectedOrder(row);
-    setDeleteModalOpen(true);
+    setStatusModalOpen(true);
   };
 
   // Define columns inside component to access handler functions
@@ -129,22 +123,32 @@ const Orders = () => {
       valueGetter: (params) => params.row.lifecycle?.length || 0,
     },
     {
-      field: "edit",
-      headerName: "Edit",
-      flex: 0.25,
+      field: "updateState",
+      headerName: "Update State",
+      flex: 0.3,
       renderCell: (params) => (
-        <IconButton onClick={() => handleUpdateModal(params.row)}>
-          <EditIcon />
+        <IconButton
+          onClick={() => handleStateUpdate(params.row)}
+          sx={{ color: theme.palette.secondary[300] }}
+        >
+          <Typography variant="caption" sx={{ fontWeight: "bold" }}>
+            State
+          </Typography>
         </IconButton>
       ),
     },
     {
-      field: "delete",
-      headerName: "Delete",
-      flex: 0.25,
+      field: "updateStatus",
+      headerName: "Update Status",
+      flex: 0.3,
       renderCell: (params) => (
-        <IconButton onClick={() => handleDeleteModal(params.row)}>
-          <DeleteIcon />
+        <IconButton
+          onClick={() => handleStatusUpdate(params.row)}
+          sx={{ color: theme.palette.secondary[300] }}
+        >
+          <Typography variant="caption" sx={{ fontWeight: "bold" }}>
+            Status
+          </Typography>
         </IconButton>
       ),
     },
@@ -157,7 +161,10 @@ const Orders = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="ORDERS" subtitle="Manage your orders" />
+      <Header
+        title="ORDER OPERATION"
+        subtitle="Update order state and status"
+      />
       <Box
         m="1rem"
         display="flex"
@@ -177,14 +184,6 @@ const Orders = () => {
             <ViewModule />
           </ToggleButton>
         </ToggleButtonGroup>
-        <Button
-          startIcon={<Add />}
-          variant="contained"
-          color="primary"
-          onClick={() => setAddModalOpen(true)}
-        >
-          Add New Order
-        </Button>
       </Box>
       {viewMode === "grid" ? (
         <Box
@@ -233,24 +232,19 @@ const Orders = () => {
       )}
 
       {/* Modals */}
-      <AddModal
-        open={addModalOpen}
-        handleClose={() => setAddModalOpen(false)}
-      />
-
-      <UpdateModal
-        open={updateModalOpen}
+      <StateUpdateModal
+        open={stateModalOpen}
         handleClose={() => {
-          setUpdateModalOpen(false);
+          setStateModalOpen(false);
           setSelectedOrder(null);
         }}
         order={selectedOrder}
       />
 
-      <DeleteModal
-        open={deleteModalOpen}
+      <StatusUpdateModal
+        open={statusModalOpen}
         handleClose={() => {
-          setDeleteModalOpen(false);
+          setStatusModalOpen(false);
           setSelectedOrder(null);
         }}
         order={selectedOrder}
@@ -259,4 +253,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default OrderOperation;

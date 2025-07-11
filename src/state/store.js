@@ -4,7 +4,6 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "state/api";
 import { authApi } from "state/authApi";
 import { authSlice } from "state/authSlice";
-import { apiSpring } from "state/apiSpring";
 import springReducer from "state/springSlice";
 import { categoryApi } from "state/categoryApi";
 import { brandApi } from "state/brandApi";
@@ -14,6 +13,7 @@ import { userApi } from "state/userApi";
 import { adminApi } from "state/adminApi";
 import { ordersApi } from "state/ordersApi";
 import { cartApi } from "state/cartApi";
+import { adsApi } from "state/adsApi";
 
 const store = configureStore({
   reducer: {
@@ -21,7 +21,6 @@ const store = configureStore({
     global: globalReducer,
     [api.reducerPath]: api.reducer,
     auth: authSlice.reducer,
-    [apiSpring.reducerPath]: apiSpring.reducer,
     spring: springReducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
     category: categoryApi,
@@ -32,12 +31,12 @@ const store = configureStore({
     [adminApi.reducerPath]: adminApi.reducer,
     [ordersApi.reducerPath]: ordersApi.reducer,
     [cartApi.reducerPath]: cartApi.reducer,
+    [adsApi.reducerPath]: adsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(authApi.middleware)
       .concat(api.middleware)
-      .concat(apiSpring.middleware)
       .concat(categoryApi.middleware)
       .concat(brandApi.middleware)
       .concat(supplierApi.middleware)
@@ -45,7 +44,8 @@ const store = configureStore({
       .concat(userApi.middleware)
       .concat(adminApi.middleware)
       .concat(ordersApi.middleware)
-      .concat(cartApi.middleware),
+      .concat(cartApi.middleware)
+      .concat(adsApi.middleware),
 });
 
 setupListeners(store.dispatch);

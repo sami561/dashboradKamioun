@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const adminApi = createApi({
   reducerPath: "adminApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://34.173.189.86/kamarket/kamarket/kamarket",
+    baseUrl: "http://localhost:3000/kamarket",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
       if (token) {
@@ -15,7 +15,7 @@ export const adminApi = createApi({
   tagTypes: ["Admins"],
   endpoints: (build) => ({
     getAdmins: build.query({
-      query: () => "user/admins",
+      query: () => "user/admins/all",
       providesTags: ["Admins"],
     }),
     createAdmin: build.mutation({

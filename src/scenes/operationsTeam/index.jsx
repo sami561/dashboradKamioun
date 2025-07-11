@@ -1,37 +1,18 @@
 import React from "react";
-import { Box, useTheme } from "@mui/material";
-import Header from "components/Header";
-import {
-  useGetAllUsersQuery,
-  useActivateUserMutation,
-  useDeactivateUserMutation,
-} from "state/userApi";
-import { Lock, LockOpen, Visibility } from "@mui/icons-material";
+import { Box, useTheme, IconButton } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { Lock, LockOpen, Visibility } from "@mui/icons-material";
+import Header from "components/Header";
+import CustomColumnMenu from "components/DataGridCustomColumnMenu";
+import { toast } from "react-toastify";
+import { useGetOperationsTeamQuery } from "state/userApi";
 import ProfileView from "scenes/profile/ProfileView";
-const Customers = () => {
+
+const OperationsTeam = () => {
   const theme = useTheme();
-  const { data, isLoading } = useGetAllUsersQuery();
-  const [activateUser] = useActivateUserMutation();
-  const [deactivateUser] = useDeactivateUserMutation();
+  const { data, isLoading, refetch } = useGetOperationsTeamQuery();
   const [selectedUser, setSelectedUser] = React.useState(null);
   const [profileOpen, setProfileOpen] = React.useState(false);
-
-  console.log("data", data);
-
-  const handleToggleStatus = async (id, active) => {
-    try {
-      if (active) {
-        await activateUser(id).unwrap();
-        console.log(`Account activated for ID: ${id}`);
-      } else {
-        await deactivateUser(id).unwrap();
-        console.log(`Account deactivated for ID: ${id}`);
-      }
-    } catch (error) {
-      console.error("Error toggling account status:", error);
-    }
-  };
 
   const handleViewProfile = (user) => {
     setSelectedUser(user);
@@ -45,8 +26,10 @@ const Customers = () => {
 
   const handleProfileUpdate = (updatedUser) => {
     // Update the user in the local data
+    refetch();
     setSelectedUser(updatedUser);
   };
+
   const columns = [
     {
       field: "_id",
@@ -67,21 +50,6 @@ const Customers = () => {
       field: "email",
       headerName: "Email",
       flex: 1,
-    },
-    {
-      field: "phoneNumber",
-      headerName: "Phone Number",
-      flex: 0.5,
-      renderCell: (params) => {
-        return params.value
-          ? params.value.replace(/^(\d{3})(\d{3})(\d{4})/, "($1)$2-$3")
-          : "";
-      },
-    },
-    {
-      field: "city",
-      headerName: "City",
-      flex: 0.5,
     },
     {
       field: "address",
@@ -119,12 +87,6 @@ const Customers = () => {
       },
     },
     {
-      field: "accountType",
-      headerName: "Account Type",
-      flex: 0.5,
-      valueGetter: (params) => params.row.account?.accountType || "N/A",
-    },
-    {
       field: "active",
       headerName: "Status",
       flex: 0.5,
@@ -153,25 +115,16 @@ const Customers = () => {
           label="View Profile"
           onClick={() => handleViewProfile(params.row)}
         />,
-        <GridActionsCellItem
-          icon={<LockOpen />}
-          label="Activate Account"
-          onClick={() => handleToggleStatus(params.row._id, true)}
-          disabled={params.row.active}
-        />,
-        <GridActionsCellItem
-          icon={<Lock />}
-          label="Deactivate Account"
-          onClick={() => handleToggleStatus(params.row._id, false)}
-          disabled={!params.row.active}
-        />,
       ],
     },
   ];
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="CUSTOMERS" subtitle="List of Customers" />
+      <Header
+        title="OPERATIONS TEAM"
+        subtitle="Managing operations team members"
+      />
       <Box
         mt="40px"
         height="75vh"
@@ -205,6 +158,9 @@ const Customers = () => {
           getRowId={(row) => row._id}
           rows={data || []}
           columns={columns}
+          components={{
+            ColumnMenu: CustomColumnMenu,
+          }}
         />
       </Box>
 
@@ -219,4 +175,4 @@ const Customers = () => {
   );
 };
 
-export default Customers;
+export default OperationsTeam;

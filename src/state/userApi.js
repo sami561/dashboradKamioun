@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://http://34.173.189.86/kamarket/kamarket/kamarket",
+    baseUrl: "http://localhost:3000/kamarket",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
       if (token) {
@@ -12,7 +12,7 @@ export const userApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Users"],
+  tagTypes: ["Users", "User", "AllUsers", "Admin", "Maneger", "AccountTypes"],
   endpoints: (build) => ({
     getUsers: build.query({
       query: () => "user/customers",
@@ -49,14 +49,73 @@ export const userApi = createApi({
       query: () => "user/customers/count",
       providesTags: ["Maneger"],
     }),
+    getAccountTypeCounts: build.query({
+      query: () => "user/account-type-counts",
+      providesTags: ["AccountTypes"],
+    }),
+    getVendors: build.query({
+      query: () => "user/vendors/all",
+      providesTags: ["Vendors"],
+    }),
+    getOperationsTeam: build.query({
+      query: () => "user/operations/all",
+      providesTags: ["OperationsTeam"],
+    }),
+    getAllUsers: build.query({
+      query: () => "user",
+      providesTags: ["AllUsers"],
+    }),
+    activateUser: build.mutation({
+      query: (id) => ({
+        url: `user/${id}/activate`,
+        method: "POST",
+      }),
+      invalidatesTags: ["AllUsers"],
+    }),
+    deactivateUser: build.mutation({
+      query: (id) => ({
+        url: `user/${id}/deactivate`,
+        method: "POST",
+      }),
+      invalidatesTags: ["AllUsers"],
+    }),
+    updateUserProfile: build.mutation({
+      query: ({ id, data }) => ({
+        url: `user/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["AllUsers"],
+    }),
+    updateProfile: build.mutation({
+      query: (data) => ({
+        url: "user/updateUser",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    getUser: build.query({
+      query: (id) => `user/${id}`,
+      providesTags: ["User"],
+    }),
   }),
 });
 
 export const {
   useGetUsersQuery,
+  useGetAllUsersQuery,
+  useGetUserQuery,
   useCreateUserMutation,
   useGetAdminCountQuery,
   useGetCountCustomersQuery,
+  useGetAccountTypeCountsQuery,
+  useGetVendorsQuery,
+  useGetOperationsTeamQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useActivateUserMutation,
+  useDeactivateUserMutation,
+  useUpdateUserProfileMutation,
+  useUpdateProfileMutation,
 } = userApi;

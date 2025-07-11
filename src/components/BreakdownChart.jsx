@@ -13,7 +13,7 @@ const BreakdownChart = ({ isDashboard = false, data }) => {
   const theme = useTheme();
 
   // Use 'data' prop if provided, else use dummy data
-  const chartData = dummyUserBreakdown;
+  const chartData = data || dummyUserBreakdown;
 
   const colors = [
     theme.palette.secondary[500],
@@ -138,7 +138,7 @@ const BreakdownChart = ({ isDashboard = false, data }) => {
         }}
       >
         <Typography variant="h6">
-          {!isDashboard && "Total:"} {total} DT
+          {!isDashboard && "Total:"} {total}
         </Typography>
       </Box>
     </Box>

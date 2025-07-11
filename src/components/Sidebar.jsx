@@ -31,6 +31,7 @@ import {
   CategoryOutlined,
   Inventory2Outlined,
   CampaignOutlined,
+  AccountCircle,
 } from "@mui/icons-material";
 import PersonIcon from "@mui/icons-material/Person";
 import { useEffect, useState } from "react";
@@ -43,6 +44,8 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import CategoryIcon from "@mui/icons-material/Category";
+import { useSelector } from "react-redux";
+import ProfileView from "scenes/profile/ProfileView";
 const navItems = [
   {
     text: "Dashboard",
@@ -115,6 +118,14 @@ const navItems = [
     icon: <Groups2Outlined />,
   },
   {
+    text: "Vendors",
+    icon: <Groups2Outlined />,
+  },
+  {
+    text: "Operations Team",
+    icon: <Groups2Outlined />,
+  },
+  {
     text: "Admin",
     icon: <AdminPanelSettingsOutlined />,
   },
@@ -141,12 +152,59 @@ const Sidebar = ({
 }) => {
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
+  const [profileOpen, setProfileOpen] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
+  // Get user data from Redux state
+  const authUser = useSelector((state) => state.auth.user);
+  const accountType = authUser?.accountType;
+  console.log("🚀 ~ accountType:", accountType);
+
+  // Define allowed tabs for each account type
+  const allowedTabs = {
+    vendor: [
+      "Dashboard",
+      "Products",
+      "Category",
+      "Brand",
+      "Suppliers",
+      "Orders",
+      "Cart",
+    ],
+    admin: [
+      "Dashboard",
+      "Customers",
+      "Vendors",
+      "Operations Team",
+      "Admin",
+      "Ads",
+    ],
+    operation: ["Dashboard", "Order Operation"],
+  };
+
+  // Add Order Operation tab for operation type
+  let filteredNavItems = navItems;
+  if (!accountType) {
+    filteredNavItems = [];
+  } else if (accountType === "operation") {
+    filteredNavItems = [
+      { text: "Dashboard", icon: <HomeOutlined /> },
+      { text: "Order Operation", icon: <InsertDriveFileIcon /> },
+    ];
+  } else if (allowedTabs[accountType]) {
+    filteredNavItems = navItems.filter(
+      (item) => !item.icon || allowedTabs[accountType].includes(item.text)
+    );
+  }
+
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
 
   return (
     <Box component="nav">
@@ -191,90 +249,131 @@ const Sidebar = ({
               </FlexBetween>
             </Box>
             <List>
-              {navItems.map(({ text, icon }) => {
-                if (!icon) {
-                  return (
-                    <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
-                      {text}
-                    </Typography>
-                  );
-                }
-                const lcText = text.toLowerCase();
+              {filteredNavItems.length === 0 ? (
+                <Typography sx={{ m: "2.25rem 0 1rem 3rem" }}>
+                  Loading menu...
+                </Typography>
+              ) : (
+                filteredNavItems.map(({ text, icon }) => {
+                  if (!icon) {
+                    return (
+                      <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
+                        {text}
+                      </Typography>
+                    );
+                  }
+                  const lcText = text.toLowerCase().replace(/ /g, "-");
 
-                return (
-                  <ListItem key={text} disablePadding>
-                    <ListItemButton
-                      onClick={() => {
-                        navigate(`/${lcText}`);
-                        setActive(lcText);
-                      }}
-                      sx={{
-                        backgroundColor:
-                          active === lcText
-                            ? theme.palette.secondary[300]
-                            : "transparent",
-                        color:
-                          active === lcText
-                            ? theme.palette.primary[600]
-                            : theme.palette.secondary[100],
-                      }}
-                    >
-                      <ListItemIcon
+                  return (
+                    <ListItem key={text} disablePadding>
+                      <ListItemButton
+                        onClick={() => {
+                          navigate(`/${lcText}`);
+                          setActive(lcText);
+                        }}
                         sx={{
-                          ml: "2rem",
+                          backgroundColor:
+                            active === lcText
+                              ? theme.palette.secondary[300]
+                              : "transparent",
                           color:
                             active === lcText
                               ? theme.palette.primary[600]
-                              : theme.palette.secondary[200],
+                              : theme.palette.secondary[100],
                         }}
                       >
-                        {icon}
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                      {active === lcText && (
-                        <ChevronRightOutlined sx={{ ml: "auto" }} />
-                      )}
-                    </ListItemButton>
-                  </ListItem>
-                );
-              })}
+                        <ListItemIcon
+                          sx={{
+                            ml: "2rem",
+                            color:
+                              active === lcText
+                                ? theme.palette.primary[600]
+                                : theme.palette.secondary[200],
+                          }}
+                        >
+                          {icon}
+                        </ListItemIcon>
+                        <ListItemText primary={text} />
+                        {active === lcText && (
+                          <ChevronRightOutlined sx={{ ml: "auto" }} />
+                        )}
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })
+              )}
             </List>
           </Box>
 
           <Box bottom="1rem">
             <Divider />
-            <FlexBetween textTransform="none" gap="1rem" m="1.5rem 2rem 0 3rem">
-              <Box
-                component="img"
-                alt="profile"
-                src={profileImage}
-                height="40px"
-                width="40px"
-                borderRadius="50%"
-                sx={{ objectFit: "cover" }}
-              />
-              <Box textAlign="left">
-                <Typography
-                  fontWeight="bold"
-                  fontSize="0.9rem"
-                  sx={{ color: theme.palette.secondary[100] }}
+            <Box
+              onClick={handleProfileClick}
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: theme.palette.secondary[300],
+                  borderRadius: "0.5rem",
+                },
+                transition: "background-color 0.2s ease",
+              }}
+            >
+              <FlexBetween
+                textTransform="none"
+                gap="1rem"
+                m="1.5rem 2rem 0 3rem"
+              >
+                <Box
+                  sx={{
+                    height: "40px",
+                    width: "40px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "transparent",
+                  }}
                 >
-                  {user.name}
-                </Typography>
-                <Typography
-                  fontSize="0.8rem"
-                  sx={{ color: theme.palette.secondary[200] }}
-                >
-                  {user.occupation}
-                </Typography>
-              </Box>
-              <SettingsOutlined
-                sx={{
-                  color: theme.palette.secondary[300],
-                  fontSize: "25px ",
-                }}
-              />
-            </FlexBetween>
+                  {imageError || !authUser?.profilePhoto ? (
+                    <AccountCircle sx={{ fontSize: 40, borderRadius: "50%" }} />
+                  ) : (
+                    <Box
+                      component="img"
+                      alt="profile"
+                      src={authUser?.profilePhoto || profileImage}
+                      height="40px"
+                      width="40px"
+                      borderRadius="50%"
+                      sx={{ objectFit: "cover" }}
+                      onError={() => setImageError(true)}
+                    />
+                  )}
+                </Box>
+                <Box textAlign="left">
+                  <Typography
+                    fontWeight="bold"
+                    fontSize="0.9rem"
+                    sx={{ color: theme.palette.secondary[100] }}
+                  >
+                    {authUser
+                      ? `${authUser.firstName} ${authUser.lastName}`
+                      : "User"}
+                  </Typography>
+                  <Typography
+                    fontSize="0.8rem"
+                    sx={{ color: theme.palette.secondary[200] }}
+                  >
+                    {authUser?.accountType || "User"}
+                  </Typography>
+                </Box>
+                <SettingsOutlined
+                  sx={{
+                    color: theme.palette.secondary[300],
+                    fontSize: "25px ",
+                  }}
+                />
+              </FlexBetween>
+            </Box>
           </Box>
         </Drawer>
       )}
