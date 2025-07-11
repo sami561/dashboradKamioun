@@ -1,7 +1,7 @@
 import axios from "axios";
 import store from "state/store"; // Ensure the path is correct
 
-export const baseURL = "http://localhost:3000/";
+export const baseURL = "http://kamioun-back-api-gateway-1:3000/";
 
 const httpClientMultipart = axios.create({
   baseURL,
