@@ -82,21 +82,28 @@ const Products = () => {
       field: "price",
       headerName: "Price",
       flex: 0.25,
-      renderCell: (params) => `$${params.value.toFixed(2)}`,
+      renderCell: (params) => `dt${params.value.toFixed(2)}`,
+    },
+    {
+      field: "unitPrice",
+      headerName: "Unit Price",
+      flex: 0.25,
+      renderCell: (params) =>
+        params.value ? `dt${Number(params.value).toFixed(2)}` : "-",
     },
     {
       field: "cost",
       headerName: "Cost",
       flex: 0.25,
       renderCell: (params) =>
-        params.value ? `$${params.value.toFixed(2)}` : "-",
+        params.value ? `dt${params.value.toFixed(2)}` : "-",
     },
     {
       field: "special_price",
       headerName: "Special Price",
       flex: 0.25,
       renderCell: (params) =>
-        params.value ? `$${params.value.toFixed(2)}` : "-",
+        params.value ? `dt${params.value.toFixed(2)}` : "-",
     },
     {
       field: "manufacturer",
@@ -107,14 +114,9 @@ const Products = () => {
       field: "brand",
       headerName: "Brand",
       flex: 0.5,
-      renderCell: (params) => params.value?.name || "-",
+      renderCell: (params) => params.value?.nameBrandFr || "-",
     },
-    {
-      field: "supplier",
-      headerName: "Supplier",
-      flex: 0.5,
-      renderCell: (params) => params.value?.name || "-",
-    },
+
     {
       field: "categories",
       headerName: "Categories",
@@ -122,12 +124,7 @@ const Products = () => {
       renderCell: (params) =>
         params.value?.map((cat) => cat.nameCategoryFr).join(", ") || "-",
     },
-    {
-      field: "website_ids",
-      headerName: "Website IDs",
-      flex: 0.5,
-      renderCell: (params) => params.value?.join(", ") || "-",
-    },
+
     {
       field: "related_products",
       headerName: "Related Products",

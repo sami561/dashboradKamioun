@@ -26,15 +26,14 @@ const formSchema = z.object({
   sku: z.string().nonempty({ message: "SKU is required" }),
   name: z.string().nonempty({ message: "Name is required" }),
   price: z.string().nonempty({ message: "Price is required" }),
+  unitPrice: z.string().nonempty({ message: "Unit Price is required" }),
   cost: z.string().optional(),
   special_price: z.string().optional(),
   manufacturer: z.string().optional(),
   brand: z.string().optional(),
-  supplier: z.string().optional(),
   categories: z
     .array(z.string())
     .min(1, { message: "At least one category is required" }),
-  website_ids: z.string().optional(),
   pcb: z.string().optional(),
   image: z.any().optional(),
 });
@@ -77,16 +76,14 @@ const AddModal = ({ open, handleClose }) => {
       formData.append("sku", data.sku);
       formData.append("name", data.name);
       formData.append("price", data.price);
+      formData.append("unitPrice", data.unitPrice);
       if (data.cost) formData.append("cost", data.cost);
       if (data.special_price)
         formData.append("special_price", data.special_price);
-      if (data.manufacturer) formData.append("manufacturer", data.manufacturer);
       if (data.brand) formData.append("brand", data.brand);
-      if (data.supplier) formData.append("supplier", data.supplier);
       data.categories.forEach((category) =>
         formData.append("categories", category)
       );
-      if (data.website_ids) formData.append("website_ids", data.website_ids);
       if (data.pcb) formData.append("pcb", data.pcb);
       if (data.image) formData.append("image", data.image);
 
@@ -166,6 +163,17 @@ const AddModal = ({ open, handleClose }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                label="Unit Price"
+                type="number"
+                {...register("unitPrice")}
+                error={!!errors.unitPrice}
+                helperText={errors.unitPrice?.message}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
                 label="Cost"
                 type="number"
                 {...register("cost")}
@@ -196,7 +204,7 @@ const AddModal = ({ open, handleClose }) => {
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <FormControl fullWidth margin="normal">
                 <InputLabel>Brand</InputLabel>
                 <Select
@@ -212,22 +220,7 @@ const AddModal = ({ open, handleClose }) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth margin="normal">
-                <InputLabel>Supplier</InputLabel>
-                <Select
-                  {...register("supplier")}
-                  label="Supplier"
-                  error={!!errors.supplier}
-                >
-                  {suppliers?.map((supplier) => (
-                    <MenuItem key={supplier._id} value={supplier._id}>
-                      {supplier.company_nameFr}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+
             <Grid item xs={12}>
               <FormControl
                 fullWidth
@@ -267,18 +260,8 @@ const AddModal = ({ open, handleClose }) => {
                 )}
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Website IDs"
-                {...register("website_ids")}
-                error={!!errors.website_ids}
-                helperText={errors.website_ids?.message}
-                fullWidth
-                margin="normal"
-                placeholder="Comma-separated IDs"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+
+            <Grid item xs={12}>
               <TextField
                 label="PCB"
                 type="number"
