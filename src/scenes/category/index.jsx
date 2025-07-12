@@ -59,7 +59,7 @@ const Category = () => {
       headerName: "Image",
       flex: 0.25,
       renderCell: (params) => {
-        const imageUrl = `http://kamioun-back-api-gateway-1:3000/kamarket${params.value}`;
+        const imageUrl = `${params.value}`;
         return (
           <Avatar
             src={imageUrl}

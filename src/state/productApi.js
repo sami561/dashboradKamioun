@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const productApi = createApi({
   reducerPath: "productApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://kamioun-back-api-gateway-1:3000/kamarket",
+    baseUrl: "http://localhost:3000/kamarket",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
       if (token) {
