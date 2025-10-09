@@ -5,7 +5,7 @@ import { setToken, setUser } from "./authSlice";
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://api-gateway:3000",
+    baseUrl: "http://samiayachi_epi-api-gateway-1:3000",
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth.token;
       if (token) {
