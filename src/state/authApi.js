@@ -64,8 +64,20 @@ export const authApi = createApi({
         localStorage.removeItem("userData");
       },
     }),
+    forgotPassword: build.mutation({
+      query: (email) => ({
+        url: "/kamarket/auth/forgot-password",
+        method: "POST",
+        body: { email },
+      }),
+      invalidatesTags: ["Auth"],
+    }),
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useRegisterMutation } =
-  authApi;
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useRegisterMutation,
+  useForgotPasswordMutation,
+} = authApi;

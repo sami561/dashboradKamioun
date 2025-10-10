@@ -1,7 +1,7 @@
 import "./LoginForm.css";
 import Logo from "../../assets/kamioun-logo.png";
 import LoginForm from "./components/LoginForm";
-import RegisterForm from "./components/RegisterForm";
+import ForgotPasswordForm from "./components/ForgotPasswordForm";
 import { useState } from "react";
 
 const LoginPage = () => {
@@ -25,12 +25,12 @@ const LoginPage = () => {
               className={`toggle-button ${!isLogin ? "active" : ""}`}
               onClick={() => setIsLogin(false)}
             >
-              Register
+              Forgot Password
             </button>
           </div>
           <div className="divider" />
 
-          {isLogin ? <LoginForm /> : <RegisterForm />}
+          {isLogin ? <LoginForm /> : <ForgotPasswordForm />}
         </div>
       </div>
     </div>

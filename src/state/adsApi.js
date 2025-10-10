@@ -16,14 +16,14 @@ export const adsApi = createApi({
   endpoints: (build) => ({
     getAds: build.query({
       query: () => ({
-        url: "http://localhost:3002/oms/api/screen/all",
+        url: "http://34.10.183.252/api/oms/api/screen/all",
         method: "GET",
       }),
       providesTags: ["Ads"],
     }),
     createScreen: build.mutation({
       query: (data) => ({
-        url: "http://localhost:3002/oms/api/screen/",
+        url: "http://34.10.183.252/api/oms/api/screen/",
         method: "POST",
         body: data,
       }),
