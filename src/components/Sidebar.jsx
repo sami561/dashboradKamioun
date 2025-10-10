@@ -72,15 +72,6 @@ const navItems = [
     icon: <AccountBalanceIcon />,
   },
 
-  /*  {
-    text: "Transactions",
-    icon: <ReceiptLongOutlined />,
-  },
-  {
-    text: "Geography",
-    icon: <PublicOutlined />,
-  }, */
-
   {
     text: "Sales",
     icon: null,
@@ -93,22 +84,7 @@ const navItems = [
     text: "Cart",
     icon: <ShoppingCartOutlined />,
   },
-  /*  {
-    text: "Overview",
-    icon: <PointOfSaleOutlined />,
-  },
-  {
-    text: "Daily",
-    icon: <TodayOutlined />,
-  },
-  {
-    text: "Monthly",
-    icon: <CalendarMonthOutlined />,
-  },
-  {
-    text: "Breakdown",
-    icon: <PieChartOutlined />,
-  }, */
+
   {
     text: "Management",
     icon: null,
@@ -129,10 +105,7 @@ const navItems = [
     text: "Admin",
     icon: <AdminPanelSettingsOutlined />,
   },
-  /*  {
-    text: "Performance",
-    icon: <TrendingUpOutlined />,
-  }, */
+
   {
     text: "Marketing",
     icon: null,
@@ -165,7 +138,6 @@ const Sidebar = ({
   const accountType = authUser?.accountType;
   console.log("🚀 ~ accountType:", accountType);
 
-  // Define allowed tabs for each account type
   const allowedTabs = {
     vendor: [
       "Dashboard",
@@ -183,6 +155,12 @@ const Sidebar = ({
       "Operations Team",
       "Admin",
       "Ads",
+      "Products",
+      "Category",
+      "Brand",
+      "Suppliers",
+      "Orders",
+      "Cart",
     ],
     operation: ["Dashboard", "Order Operation"],
   };

@@ -1,7 +1,7 @@
 import axios from "axios";
 import store from "state/store"; // Ensure the path is correct
 
-export const baseURL = "http://localhost:3000/";
+export const baseURL = "http://34.10.183.252/api";
 const httpClient = axios.create({
   baseURL,
   headers: { "Content-Type": "application/json" },

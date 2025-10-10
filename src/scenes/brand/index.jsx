@@ -49,7 +49,7 @@ const Brand = () => {
       headerName: "Brand Logo",
       flex: 0.25,
       renderCell: (params) => {
-        const imageUrl = `http://localhost:3000/kamarket${params.value}`;
+        const imageUrl = `http://34.10.183.252/api/kamarket${params.value}`;
         return (
           <Avatar
             src={imageUrl}
