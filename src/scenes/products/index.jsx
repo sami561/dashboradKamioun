@@ -126,13 +126,6 @@ const Products = () => {
     },
 
     {
-      field: "related_products",
-      headerName: "Related Products",
-      flex: 0.5,
-      renderCell: (params) =>
-        params.value?.map((product) => product.name).join(", ") || "-",
-    },
-    {
       field: "pcb",
       headerName: "PCB",
       flex: 0.25,

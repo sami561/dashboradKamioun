@@ -111,7 +111,8 @@ const AddModal = ({ open, handleClose }) => {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 400,
+          width: 800,
+          maxWidth: "90vw",
           bgcolor: "background.paper",
           boxShadow: 24,
           borderRadius: 4,
@@ -204,7 +205,7 @@ const AddModal = ({ open, handleClose }) => {
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <FormControl fullWidth margin="normal">
                 <InputLabel>Brand</InputLabel>
                 <Select
@@ -221,7 +222,7 @@ const AddModal = ({ open, handleClose }) => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <FormControl
                 fullWidth
                 margin="normal"
