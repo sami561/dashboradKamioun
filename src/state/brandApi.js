@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const brandApi = createApi({
   reducerPath: "brandApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://apigateway:3000/kamarket",
+    baseUrl: "http://34.10.183.252/api",
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth.token;
       if (token) {
